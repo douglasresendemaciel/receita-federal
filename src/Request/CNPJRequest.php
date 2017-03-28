@@ -22,7 +22,7 @@ class CNPJRequest extends Request
     public function rules()
     {
         return [
-            'cnpj' => 'required',
+            'cnpj' => 'required|cnpj',
             'captcha' => 'required'
         ];
     }

@@ -24,7 +24,7 @@ class CPFRequest extends Request
     public function rules()
     {
         return [
-            'cpf' => 'required|numeric|digits:11',
+            'cpf' => 'required|numeric|cpf|digits:11',
             'birthday' => 'required|date|date_format:d/m/Y',
             'captcha' => 'required'
         ];

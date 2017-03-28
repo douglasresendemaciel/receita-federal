@@ -10,7 +10,8 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "illuminate/support": "^5.3"
+    "illuminate/support": "^5.3",
+    "douglasresendemaciel/brazilian-documents-validator": "@dev"
   },
   "autoload": {
     "psr-4": {
