@@ -1,0 +1,20 @@
+{
+  "name": "douglasresendemaciel/receita-federal",
+  "description": "Get documents information from brazilian receita federal",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Douglas Resende Maciel",
+      "email": "eu@douglasresende.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "illuminate/support": "^5.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "DouglasResende\\ReceitaFederal\\": "src"
+    }
+  }
+}
