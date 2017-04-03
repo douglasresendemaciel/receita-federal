@@ -3,8 +3,10 @@
 namespace DouglasResende\ReceitaFederal\Controller;
 
 use App\Http\Controllers\Controller;
-use DouglasResende\ReceitaFederal\Request\CNPJRequest;
 use DouglasResende\ReceitaFederal\Traits\ProcessTrait;
+use Illuminate\Support\Facades\File;
+use Illuminate\Http\Request;
+use Validator;
 
 class CNPJController extends Controller
 {
@@ -18,9 +20,26 @@ class CNPJController extends Controller
         $this->file = storage_path('app/receita-federal/' . session_id() . '_cnpj');
     }
 
-    public function index(CNPJRequest $request)
+    public function index(Request $request)
     {
-        if (!file_exists($this->file)) {
+        $data = $request->all();
+
+        if (isset($data['cnpj'])) {
+            $value = preg_replace("/[^0-9]/", "", $data['cnpj']);
+            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+            $data['cnpj'] = $value;
+        }
+
+        $validator = Validator::make($data, [
+            'cnpj' => 'required|cnpj',
+            'captcha' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        if (!File::exists($this->file)) {
             return false;
         } else {
             // pega os dados de sessão gerados na visualização do captcha dentro do cookie
@@ -63,8 +82,8 @@ class CNPJController extends Controller
         (
             'submit1' => 'Consultar',
             'origem' => 'comprovante',
-            'cnpj' => $request->get('cnpj'),
-            'txtTexto_captcha_serpro_gov_br' => $request->get('captcha'),
+            'cnpj' => $data['cnpj'],
+            'txtTexto_captcha_serpro_gov_br' => $data['captcha'],
             'search_type' => 'cnpj'
 
         );

@@ -43,7 +43,7 @@ PROCESS ROUTE CPF => route( 'receita-federal.processCPF', ['cpf' => number, 'cap
 
 ## Usage
 
-To show the captcha image, use img tag like ```<img src="route( 'receita-federal.captcha', ['document' => TYPE ] )" alt="captcha" height="42" width="42">```
+To show the captcha image, use img tag like ```<img src="{{ route( 'receita-federal.captcha', ['document' => TYPE ] ) }}" alt="captcha">```
 
 then post the form to be processed at the routes of PROCESS ROUTES
 
