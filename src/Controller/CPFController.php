@@ -3,10 +3,9 @@
 namespace DouglasResende\ReceitaFederal\Controller;
 
 use App\Http\Controllers\Controller;
+use DouglasResende\ReceitaFederal\Request\CPFRequest;
 use DouglasResende\ReceitaFederal\Traits\ProcessTrait;
 use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
-use Validator;
 
 class CPFController extends Controller
 {
@@ -20,25 +19,11 @@ class CPFController extends Controller
         $this->file = storage_path('app/receita-federal/' . session_id() . '_cpf');
     }
 
-    public function index(Request $request)
+    public function index(CPFRequest $request)
     {
         $data = $request->all();
 
-        if (isset($data['cpf'])) {
-            $value = preg_replace("/[^0-9]/", "", $data['cpf']);
-            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
-            $data['cpf'] = $value;
-        }
-
-        $validator = Validator::make($data, [
-            'cpf' => 'required|numeric|cpf|digits:11',
-            'birthday' => 'required|date|date_format:d/m/Y',
-            'captcha' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
+        $birthday =  new \DateTime($data['birthday']);
 
         if (!File::exists($this->file)) {
             return false;
@@ -62,7 +47,7 @@ class CPFController extends Controller
         (
             'txtTexto_captcha_serpro_gov_br' => $data['captcha'],
             'tempTxtCPF' => $data['cpf'],
-            'tempTxtNascimento' => $data['birthday'],
+            'tempTxtNascimento' => date_format($birthday, 'd/m/Y'),
             'temptxtToken_captcha_serpro_gov_br' => '',
             'temptxtTexto_captcha_serpro_gov_br' => $data['captcha']
         );
