@@ -2,6 +2,8 @@
 
 namespace DouglasResende\ReceitaFederal\Request;
 
+use Illuminate\Support\Facades\Input;
+
 class CNPJRequest extends Request
 {
     /**
@@ -25,5 +27,16 @@ class CNPJRequest extends Request
             'cnpj' => 'required|cnpj',
             'captcha' => 'required'
         ];
+    }
+
+    public function all()
+    {
+        $input = parent::all();
+
+        if (!empty(Input::get('cnpj'))) {
+            $input['cnpj'] = $this->sanitizeNumbers($input['cnpj']);
+        }
+
+        return $input;
     }
 }
