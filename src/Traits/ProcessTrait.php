@@ -11,7 +11,7 @@ trait ProcessTrait
     protected function getContent($start, $end, $total)
     {
         $content = str_replace($start, '', str_replace(strstr(strstr($total, $start), $end), '', strstr($total, $start)));
-        return (strip_tags($content));
+        return $content;
     }
 
     public function parseHtmlCPF($html)
@@ -109,7 +109,8 @@ trait ProcessTrait
             $secondaryCNAE = explode('<b>', $result[5]);
             $result[5] = $secondaryCNAE;
             unset($secondaryCNAE);
-        }
+        } else
+            $result[5] = [$result[5]];
 
         if (!$result[0]) {
             if (strstr($html3, 'O número do CNPJ não é válido')) {
