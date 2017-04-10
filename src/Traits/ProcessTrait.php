@@ -14,6 +14,17 @@ trait ProcessTrait
         return $content;
     }
 
+    public function stripTagsDeep($value, $key = null)
+    {
+        if (is_array($value)) {
+            return array_map(function ($n) {
+                return $this->stripTagsDeep($n);
+            }, $value, array_keys($value));
+        } else {
+            return strip_tags($value);
+        }
+    }
+
     public function parseHtmlCPF($html)
     {
         $fields = [
@@ -40,6 +51,8 @@ trait ProcessTrait
             $result[] = trim($this->getContent($fields[$i], '<br />', $html2));
             $html = $html2;
         }
+
+        $result = $this->stripTagsDeep($result);
 
         if (!$result[0]) {
             if (strstr($html3, 'CPF incorreto')) {
@@ -98,6 +111,7 @@ trait ProcessTrait
             '<b>MATRIZ<br>',
             '<b>FILIAL<br>'
         ];
+
         $html = str_replace('<br><b>', '<b>', str_replace($especialChars, '', strip_tags($html, '<b><br>')));
         $html3 = $html;
         for ($i = 0; $i < count($fields); $i++) {
@@ -111,6 +125,8 @@ trait ProcessTrait
             unset($secondaryCNAE);
         } else
             $result[5] = [$result[5]];
+
+        $result = $this->stripTagsDeep($result);
 
         if (!$result[0]) {
             if (strstr($html3, 'O número do CNPJ não é válido')) {
