@@ -185,6 +185,8 @@ trait ProcessTrait
             $html = $html2;
         }
 
+        $result = $this->stripTagsDeep($result);
+
         if (!$result[0]) {
             $result = [];
             if (strstr($html3, 'atender a sua solicitação')) {
